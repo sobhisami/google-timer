@@ -1,54 +1,79 @@
-const display = document.getElementById("display");
-const startButton = document.getElementById("startButton");
-const stopButton = document.getElementById("stopButton");
-const resetButton = document.getElementById("resetButton");
+// Timer variables
+let timerInterval;
+let timerRunning = false;
+let timerSeconds = 0;
 
-let startTime, elapsedTime = 0, isRunning = false, stopwatchInterval;
+// Stopwatch variables
+let stopwatchInterval;
+let stopwatchRunning = false;
+let stopwatchSeconds = 0;
 
-function toggleStartStopwatch() {
-  if (isRunning) {
-    clearInterval(stopwatchInterval);
-    startButton.textContent = "Resume";
-  } else {
-    startTime = Date.now() - elapsedTime;
-    stopwatchInterval = setInterval(updateStopwatch, 10);
-    startButton.textContent = "Pause";
-  }
-  isRunning = !isRunning;
+function openTab(tabName) {
+    // Hide all tab contents
+    document.getElementById("timerTab").style.display = "none";
+    document.getElementById("stopwatchTab").style.display = "none";
+
+    // Show the selected tab content
+    document.getElementById(tabName + "Tab").style.display = "block";
+}
+
+function startTimer() {
+    if (!timerRunning) {
+        const input = document.getElementById("timerInput").value;
+        const timeInSeconds = parseInt(input, 10);
+
+        if (!isNaN(timeInSeconds)) {
+            timerSeconds = timeInSeconds;
+            timerInterval = setInterval(updateTimer, 1000);
+            timerRunning = true;
+        }
+    }
+}
+
+function stopTimer() {
+    clearInterval(timerInterval);
+    timerRunning = false;
+}
+
+function updateTimer() {
+    const hours = Math.floor(timerSeconds / 3600);
+    const minutes = Math.floor((timerSeconds % 3600) / 60);
+    const seconds = timerSeconds % 60;
+    const timerDisplay = document.getElementById("timerDisplay");
+    timerDisplay.textContent = `${hours.toString().padStart(2, '0')}:${minutes.toString().padStart(2, '0')}:${seconds.toString().padStart(2, '0')}`;
+
+    if (timerSeconds <= 0) {
+        stopTimer();
+    } else {
+        timerSeconds--;
+    }
+}
+
+function startStopwatch() {
+    if (!stopwatchRunning) {
+        stopwatchInterval = setInterval(updateStopwatch, 1000);
+        stopwatchRunning = true;
+    }
 }
 
 function stopStopwatch() {
-  if (isRunning) {
     clearInterval(stopwatchInterval);
-    isRunning = false;
-    startButton.textContent = "Start";
-  }
+    stopwatchRunning = false;
 }
 
 function resetStopwatch() {
-  clearInterval(stopwatchInterval);
-  isRunning = false;
-  elapsedTime = 0;
-  display.textContent = "00:00:00";
-  startButton.textContent = "Start";
+    clearInterval(stopwatchInterval);
+    stopwatchRunning = false;
+    stopwatchSeconds = 0;
+    const stopwatchDisplay = document.getElementById("stopwatchDisplay");
+    stopwatchDisplay.textContent = "00:00:00";
 }
 
 function updateStopwatch() {
-  const currentTime = Date.now();
-  elapsedTime = currentTime - startTime;
-  display.textContent = formatTime(elapsedTime);
+    const hours = Math.floor(stopwatchSeconds / 3600);
+    const minutes = Math.floor((stopwatchSeconds % 3600) / 60);
+    const seconds = stopwatchSeconds % 60;
+    const stopwatchDisplay = document.getElementById("stopwatchDisplay");
+    stopwatchDisplay.textContent = `${hours.toString().padStart(2, '0')}:${minutes.toString().padStart(2, '0')}:${seconds.toString().padStart(2, '0')}`;
+    stopwatchSeconds++;
 }
-
-function formatTime(time) {
-  const format = (value) => value.toString().padStart(2, "0");
-  const milliseconds = Math.floor((time % 1000) / 10);
-  const seconds = Math.floor((time / 1000) % 60);
-  const minutes = Math.floor((time / (1000 * 60)) % 60);
-  const hours = Math.floor((time / (1000 * 60 * 60)) % 24);
-
-  return `${format(hours)}:${format(minutes)}:${format(seconds)}.${format(milliseconds)}`;
-}
-
-startButton.addEventListener("click", toggleStartStopwatch);
-stopButton.addEventListener("click", stopStopwatch);
-resetButton.addEventListener("click", resetStopwatch);

@@ -1,22 +1,30 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Document</title>
-  <link rel="stylesheet" href="style.css">
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Timer and Stopwatch</title>
+    <link rel="stylesheet" href="style.css">
 </head>
 <body>
-  <div class="container">
-    <div class="stopwatch">
-      <span id="display">00:00:00</span>
-       <div class="btn">
-        <button id="startButton">Start</button>
-        <button id="stopButton">Stop</button>
-        <button id="resetButton">Reset</button>
-       </div>
+    <div class="container">
+        <div class="tab" onclick="openTab('timer')">Timer</div>
+        <div class="tab" onclick="openTab('stopwatch')">Stopwatch</div>
     </div>
-  </div>
-  <script src="script.js"></script>  
+    <div id="timerTab" class="tab-content" style="display:none;">
+        <h2>Timer</h2>
+        <input type="text" id="timerInput" placeholder="Enter time (seconds)">
+        <button onclick="startTimer()">Start</button>
+        <button onclick="stopTimer()">Stop</button>
+        <div id="timerDisplay">00:00:00</div>
+    </div>
+    <div id="stopwatchTab" class="tab-content" style="display:none;">
+        <h2>Stopwatch</h2>
+        <button onclick="startStopwatch()">Start</button>
+        <button onclick="stopStopwatch()">Stop</button>
+        <button onclick="resetStopwatch()">Reset</button>
+        <div id="stopwatchDisplay">00:00:00</div>
+    </div>
+    <script src="script.js"></script>
 </body>
 </html>
